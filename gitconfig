@@ -24,7 +24,7 @@
   untracked = cyan
 [core]
   whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
-  excludesfile = ~/.gitignore
+  excludesfile = /opt/boxen/config/git/gitignore
 [alias]
   st = status
   ci = commit
@@ -43,19 +43,19 @@
   lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
   ls = ls-files
   ign = ls-files -o -i --exclude-standard # Show files ignored by git:
-[credential]
-  helper = osxkeychain
 [filter "media"]
   clean = git media clean %f
   smudge = git media smudge %f
   required = true
+[diff]
+  tool = icdiff
 [merge]
   tool = vimdiff
 [help]
   autocorrect = 1
 [github]
   user = danilopopeye
-[ghi]
-  token = !security find-internet-password -a danilopopeye -s github.com -l 'ghi token' -w
-[ghi "highlight"]
-  style = default
+[hub]
+  protocol = https
+[credential]
+  helper = /opt/boxen/bin/boxen-git-credential

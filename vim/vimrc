@@ -74,6 +74,8 @@ Bundle 'othree/javascript-libraries-syntax.vim'
 Bundle 'myusuf3/numbers.vim'
 Bundle 'plasticboy/vim-markdown'
 
+set encoding=utf-8
+set fileencoding=utf-8
 filetype plugin indent on
 filetype plugin on
 
@@ -102,9 +104,9 @@ set visualbell
 set noerrorbells
 set nobackup
 set noswapfile
-set listchars=tab:▸\ ,eol:¬,trail:⋅,extends:❯,precedes:❮
+" set listchars=tab:▸\ ,eol:¬,trail:⋅,extends:❯,precedes:❮
 set nolist
-set showbreak=↪
+" set showbreak=↪
 set backspace=indent,eol,start
 set scrolloff=3
 set title
@@ -115,7 +117,7 @@ set nofoldenable
 set wildignore+=.DS_Store,node_modules,*/tmp/*,*.so,*.swp,coverage
 set wildmenu
 set wildmode=list:longest
-set shell=/usr/local/bin/zsh
+set shell=/opt/boxen/homebrew/bin/zsh
 
 " dont continue comments when pushing o/O
 set formatoptions-=o
@@ -219,6 +221,7 @@ nmap <silent> <Leader>gc  :Gcommit<CR>
 nmap <silent> <Leader>ga  :Gcommit --amend<CR>
 nmap <silent> <Leader>gm  :Gmove
 nmap <silent> <Leader>ge  :Gedit
+nmap <silent> <Leader>gw  :Gwrite<CR>
 nmap <silent> <Leader>gr  :Gread<CR>
 nmap <silent> <Leader>grm :Gremove<CR>
 nmap <silent> <Leader>gd  :Gdiff<CR>

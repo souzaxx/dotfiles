@@ -1,5 +1,5 @@
 # Path to your oh-my-zsh configuration.
-ZSH=$HOME/.dotfiles/oh-my-zsh
+ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -34,21 +34,31 @@ COMPLETION_WAITING_DOTS="true"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 plugins=(brew gem git git-extras heroku node npm powify rbenv rails redis-cli safe-paste tmux tmuxinator vagrant docker zeus)
 
+
+# Use English as the language
+LANG='en_US.UTF-8'
+LC_CTYPE='en_US.UTF-8'
+export LANG
+export LC_CTYPE
+
 source $ZSH/oh-my-zsh.sh
-source $HOME/.dotfiles/promptline.sh
+source $HOME/code/dotfiles/promptline.sh
 
 # Customize to your needs...
 
 # export PATH=/usr/local/bin:/usr/local/sbin:$PATH
-PATH=/usr/local/bin:/usr/local/sbin:/usr/local/share/npm/bin:$PATH
+# PATH=/usr/local/bin:/usr/local/sbin:/usr/local/share/npm/bin:$PATH
 PATH=/Applications/Postgres.app/Contents/MacOS/bin:$PATH
 
 # fpath=(/usr/local/share/zsh $fpath)
-fpath=(/usr/local/share/zsh-completions $fpath)
-fpath=(/usr/local/share/zsh/site-functions $fpath)
+# fpath=($HOMEBREW_ROOT/share/zsh/site-functions $fpath)
+fpath=($HOMEBREW_ROOT/share/zsh-completions $fpath)
+
+# boxen paths and stuff
+[ -f /opt/boxen/env.sh ] && source /opt/boxen/env.sh
 
 # zsh highlight
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $HOMEBREW_ROOT/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # tmuxinator
 [[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
@@ -57,9 +67,9 @@ source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # alias vim="/usr/local/bin/mvim -v"
 # alias vimdiff="/usr/local/bin/mvim -v mvimdiff"
 
-export EDITOR='vim'
-export SHELL='/usr/local/bin/zsh'
-export DOCKER_HOST='localhost'
+export EDITOR=vim
+export SHELL=$BOXEN_HOME/bin/zsh
+export DOCKER_HOST=localhost
 
 # Bash aliases
 alias l="ls -hG"
@@ -94,7 +104,7 @@ alias hidden_files="defaults write com.apple.finder AppleShowAllFiles"
 # fix Open With menu
 alias fix_open_with='/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -kill -r -domain local -domain user && killall Finder'
 
-export PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#D" | tr -d %) "$PWD")'
+# export PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#D" | tr -d %) "$PWD")'
 
 hitch() {
   command hitch "$@"
