@@ -6,23 +6,24 @@ fi
 source ~/.zplug/init.zsh
 
 zplug "junegunn/fzf", as:command, use:'bin/fzf-tmux'
-zplug "junegunn/fzf-bin", from:gh-r, as:command, rename-to:fzf
-zplug "stedolan/jq", from:gh-r, as:command, rename-to:jq
+zplug "junegunn/fzf-bin", from:gh-r, as:command, rename-to:"fzf"
+zplug "stedolan/jq", from:gh-r, as:command, rename-to:"jq"
+zplug "simeji/jid", from:gh-r, as:command, rename-to:"jid"
 zplug "yudai/sshh", as:command
-zplug "b4b4r07/httpstat", as:command, use:'(*).sh', rename-to:'$1'
-zplug "BurntSushi/ripgrep", from:gh-r, as:command, rename-to:rg
+zplug "b4b4r07/httpstat", as:command, use:'(*).sh', rename-to:"$1"
+zplug "BurntSushi/ripgrep", from:gh-r, as:command, rename-to:"rg"
 zplug "BurntSushi/xsv", from:gh-r, as:command
 
 # XXX: depends of issue #298 to work
-# zplug "ogham/exa", from:gh-r, as:command, rename-to:exa
+# zplug "ogham/exa", from:gh-r, as:command, rename-to:"exa"
 
 zplug "plugins/colored-man-pages", from:oh-my-zsh
 zplug "plugins/httpie", from:oh-my-zsh
 zplug "plugins/ssh-agent", from:oh-my-zsh
 zplug "plugins/safe-paste", from:oh-my-zsh
 
-zplug "~/.dotfiles", from:local
-zplug "~/.dotfiles", from:local, as:command, use:"bin/*"
+zplug "~/code/dotfiles", from:local
+zplug "~/code/dotfiles", from:local, as:command, use:"bin/*"
 
 zplug "zsh-users/zsh-completions"
 # zplug "zsh-users/zsh-autosuggestions" # configure
@@ -39,6 +40,19 @@ fi
 # Then, source plugins and add commands to $PATH
 zplug load
 
+if [[ ! -d ~/.nodenv ]]; then
+  echo 'nodenv not found, installing...'
+  git clone https://github.com/nodenv/nodenv.git ~/.nodenv
+  pushd ~/.nodenv && src/configure && make -C src && popd
+  eval "$(nodenv init -)"
+  git clone https://github.com/nodenv/node-build.git $(nodenv root)/plugins/node-build
+fi
+
+if [[ ! -d ~/.goenv ]]; then
+  echo 'goenv not found, installing...'
+  git clone https://github.com/syndbg/goenv.git ~/.goenv
+fi
+
 # alias ll="ls -lh"
 alias ll="exa -bghHl --git"
 alias la="ll -a"
@@ -47,11 +61,11 @@ alias vim=nvim
 # local AWS development helpers
 alias sns='dotenv aws --endpoint-url http://localhost:4100 sns'
 alias sqs='dotenv aws --endpoint-url http://localhost:4100 sqs'
-alias dynamodb='dotenv aws --endpoint-url http://localhost:8889 dynamodb'
+alias dynamodb='dotenv aws --endpoint-url http://localhost:8888 dynamodb'
 
 export EDITOR=nvim
 export LC_ALL="en_US.UTF-8"
-export PATH=$PATH:/bin:/usr/local/sbin:/usr/sbin:/usr/sbin:./bin:$HOME/.npm-global/bin:./node_modules/.bin
+export PATH=/usr/local/bin:$PATH:/bin:/usr/local/sbin:/usr/sbin:/usr/sbin:./bin:$HOME/.npm-global/bin:./node_modules/.bin
 export DOCKER_HOST="tcp://127.0.0.1:2376"
 
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob \!.git 2>/dev/null'

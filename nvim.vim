@@ -20,8 +20,6 @@ Plug 'simnalamburt/vim-mundo'
 Plug 'junegunn/fzf.vim'
 
 " languages and stuff
-Plug 'jelera/vim-javascript-syntax'
-" Plug 'pangloss/vim-javascript'
 " Plug 'ecomba/vim-ruby-refactoring'
 Plug 'Keithbsmiley/rspec.vim'
 " Plug 'thoughtbot/vim-rspec'
@@ -41,6 +39,13 @@ Plug 'tpope/vim-haml'
 Plug 'tpope/vim-rbenv'
 " Plug 'rust-lang/rust.vim'
 Plug 'fatih/vim-go'
+
+" Javascript & React stuff
+" Plug 'pangloss/vim-javascript'
+" Plug 'jelera/vim-javascript-syntax'
+" Plug 'mxw/vim-jsx'
+Plug 'othree/yajs.vim'
+Plug 'MaxMEllon/vim-jsx-pretty'
 
 " session management
 Plug 'tpope/vim-obsession'
@@ -69,7 +74,7 @@ set splitright
 set foldenable
 set foldmethod=syntax
 set nofoldenable
-set wildignore+=.DS_Store,node_modules,*/tmp/*,*.so,*.swp,coverage,tests/roles/*
+set wildignore+=.DS_Store,node_modules,*/tmp/*,*.so,*.swp,coverage,tests/roles/*,vendor/bundle
 set rtp+=~/.fzf
 
 " Enable persistent undo so that undo history persists across vim sessions
