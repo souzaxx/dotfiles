@@ -18,6 +18,7 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'pearofducks/ansible-vim'
 Plug 'simnalamburt/vim-mundo'
 Plug 'junegunn/fzf.vim'
+" Plug 'euclio/gitignore.vim', { 'commit': '9437ac849082ce359bb53322d99549018842452f' }
 
 " languages and stuff
 Plug 'jelera/vim-javascript-syntax'
@@ -69,7 +70,7 @@ set splitright
 set foldenable
 set foldmethod=syntax
 set nofoldenable
-set wildignore+=.DS_Store,node_modules,*/tmp/*,*.so,*.swp,coverage,tests/roles/*
+set wildignore+=.DS_Store,node_modules,tmp/*,*.so,*.swp,coverage,tests/roles/*,roles
 set rtp+=~/.fzf
 
 " Enable persistent undo so that undo history persists across vim sessions
@@ -124,6 +125,29 @@ set statusline+=%*
 
 " syntastic languages
 let g:syntastic_javascript_checkers = ['eslint']
+
+" Golang stuff
+let g:go_fmt_command = "goimports"
+let g:go_fmt_autosave = 1
+let g:go_auto_type_info = 1
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_structs = 1
+
+" run :GoBuild or :GoTestCompile based on the go file
+function! s:build_go_files()
+  let l:file = expand('%')
+  if l:file =~# '^\f\+_test\.go$'
+    call go#test#Test(0, 1)
+  elseif l:file =~# '^\f\+\.go$'
+    call go#cmd#Build(0)
+  endif
+endfunction
+
+autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
 
 " ctrlp
 nmap <silent> <leader>f :FZF<CR>

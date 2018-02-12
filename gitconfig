@@ -5,6 +5,12 @@
   default = current
 [fetch]
   prune = true
+[diff]
+  tool = icdiff
+[difftool]
+  prompt = false
+[difftool "icdiff"]
+  cmd = icdiff -NH $LOCAL $REMOTE
 [color]
   ui = true
   branch = auto
@@ -59,3 +65,5 @@
   autocorrect = 1
 [github]
   user = danilopopeye
+[credential "web.gituol.intranet"]
+  username = dsgoncalves
