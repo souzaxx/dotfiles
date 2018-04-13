@@ -10,6 +10,9 @@
 
 source ~/.zplug/init.zsh
 
+ZPLUG_LOG_LOAD_SUCCESS=false
+ZPLUG_LOG_LOAD_FAILURE=false
+
 # commands
 zplug "junegunn/fzf", as:command, use:'bin/fzf-tmux'
 zplug "junegunn/fzf-bin", from:gh-r, as:command, rename-to:fzf
@@ -21,6 +24,7 @@ zplug "BurntSushi/xsv", from:gh-r, as:command
 zplug "bcicen/ctop", from:gh-r, as:command, rename-to:ctop
 zplug "asciimoo/wuzz", from:gh-r, as:command, rename-to:wuzz
 zplug "awslabs/aws-sam-local", from:gh-r, as:command, rename-to:sam
+zplug "arthepsy/ssh-audit", as:command, use:'(*).py', rename-to:'$1'
 
 # XXX: depends of issue #298 to work
 # zplug "ogham/exa", from:gh-r, as:command, rename-to:exa
@@ -66,7 +70,7 @@ alias dynamodb='dotenv aws --endpoint-url http://localhost:8889 dynamodb'
 export LESS=-r
 export EDITOR=nvim
 export LC_ALL="en_US.UTF-8"
-export PATH=$HOME/.npm-global/bin:./node_modules/.bin:$PATH
+export PATH=$HOME/.npm-global/bin:./node_modules/.bin:$PATH:/usr/sbin
 export DOCKER_HOST="tcp://127.0.0.1:2376"
 
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob \!.git 2>/dev/null'

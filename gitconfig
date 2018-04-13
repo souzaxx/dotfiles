@@ -11,6 +11,12 @@
   prompt = false
 [difftool "icdiff"]
   cmd = icdiff -NH $LOCAL $REMOTE
+[merge]
+  tool = vimdiff
+[mergetool]
+  prompt = true
+[mergetool "vimdiff"]
+  cmd = nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
 [color]
   ui = true
   branch = auto
@@ -59,8 +65,6 @@
   clean = git media clean %f
   smudge = git media smudge %f
   required = true
-[merge]
-  tool = vimdiff
 [help]
   autocorrect = 1
 [github]
