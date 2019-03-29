@@ -1,4 +1,4 @@
-call plug#begin('~/.vim/plugged')
+call plug#begin('$HOME/.config/nvim/plugged')
 
 if !has('nvim')
   Plug 'tpope/vim-sensible'
@@ -10,16 +10,21 @@ Plug 'docunext/closetag.vim'
 " Plug 'matchit.zip'
 Plug 'kien/ctrlp.vim'
 Plug 'mileszs/ack.vim'
-Plug 'vim-syntastic/syntastic'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-vinegar'
 Plug 'ntpeters/vim-better-whitespace'
-Plug 'pearofducks/ansible-vim'
 Plug 'simnalamburt/vim-mundo'
+
+
+" Plug 'vim-syntastic/syntastic'
+Plug 'w0rp/ale'
+
+Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
 
 " languages and stuff
+Plug 'pearofducks/ansible-vim'
 Plug 'jelera/vim-javascript-syntax'
 " Plug 'pangloss/vim-javascript'
 " Plug 'ecomba/vim-ruby-refactoring'
@@ -77,8 +82,9 @@ set undofile
 set undodir=~/.config/nvim/undo
 
 " color and theme
-set background=dark
+" set background=dark
 colorscheme Tomorrow-Night
+" colorscheme Tomorrow
 
 highlight NonText guibg=#060606
 highlight Folded  guibg=#0A0A0A guifg=#9090D0
@@ -138,12 +144,42 @@ let g:ctrlp_max_height = 15
 " 	\ },
 " 	\ 'fallback': 'ag -g -l %s'
 " \ }
-let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+if executable('rg')
+  set grepprg=rg\ --color=never
+  let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
+  let g:ctrlp_use_caching = 0
+else
+  let g:ctrlp_user_command = 'ag %s --nocolor --nogroup --hidden -g ""'
+endif
 
 " fzf emulate ctrlp
 nmap <silent> <leader>f :FZF<CR>
 nmap <silent> <leader>p :GFiles<CR>
 nmap <silent> <leader>h :Helptags<CR>
+
+" Golang stuff
+let g:go_metalinter_command = "golangci-lint"
+" let g:go_fmt_command = "goimports"
+let g:go_fmt_autosave = 1
+let g:go_auto_type_info = 1
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_structs = 1
+
+" run :GoBuild or :GoTestCompile based on the go file
+function! s:build_go_files()
+  let l:file = expand('%')
+  if l:file =~# '^\f\+_test\.go$'
+    call go#test#Test(0, 1)
+  elseif l:file =~# '^\f\+\.go$'
+    call go#cmd#Build(0)
+  endif
+endfunction
+
+autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
 
 " window navigation
 nnoremap <C-h> <C-w>h
@@ -171,6 +207,7 @@ autocmd BufReadPost fugitive://* set bufhidden=delete
 
 " ProSession
 let g:prosession_per_branch = 1
+" let g:prosession_dir=~/.config/nvim/session
 
 " fugitive maps
 nmap <silent> <Leader>gs  :Gstatus<CR>

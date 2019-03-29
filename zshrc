@@ -1,30 +1,28 @@
-# Check if zplug is installed
-if [[ ! -d ~/.zplug ]]; then
-  git clone https://github.com/zplug/zplug ~/.zplug
-fi
+# zmodload zsh/zprof # debug init start
 
+bindkey -e
 source ~/.zplug/init.zsh
 
-zplug "junegunn/fzf", as:command, use:'bin/fzf-tmux'
-zplug "junegunn/fzf-bin", from:gh-r, as:command, rename-to:fzf
-zplug "stedolan/jq", from:gh-r, as:command, rename-to:jq
-zplug "yudai/sshh", as:command
-zplug "b4b4r07/httpstat", as:command, use:'(*).sh', rename-to:'$1'
-zplug "BurntSushi/ripgrep", from:gh-r, as:command, rename-to:rg
-zplug "BurntSushi/xsv", from:gh-r, as:command
+# zplug "junegunn/fzf", as:command, use:'bin/fzf-tmux'
+# zplug "junegunn/fzf-bin", from:gh-r, as:command, rename-to:fzf
+# zplug "stedolan/jq", from:gh-r, as:command, rename-to:jq
+# zplug "yudai/sshh", as:command
+# zplug "b4b4r07/httpstat", as:command, use:'(*).sh', rename-to:'$1'
+# zplug "BurntSushi/ripgrep", from:gh-r, as:command, rename-to:rg
+# zplug "BurntSushi/xsv", from:gh-r, as:command
 
 # XXX: depends of issue #298 to work
 # zplug "ogham/exa", from:gh-r, as:command, rename-to:exa
 
 zplug "plugins/colored-man-pages", from:oh-my-zsh
-zplug "plugins/httpie", from:oh-my-zsh
+# zplug "plugins/httpie", from:oh-my-zsh
 zplug "plugins/ssh-agent", from:oh-my-zsh
 zplug "plugins/safe-paste", from:oh-my-zsh
 
-zplug "~/.dotfiles", from:local
-zplug "~/.dotfiles", from:local, as:command, use:"bin/*"
+zplug "danilopopeye/dotfiles"
+zplug "danilopopeye/dotfiles", as:command, use:"bin/*"
 
-zplug "zsh-users/zsh-completions"
+# zplug "zsh-users/zsh-completions"
 # zplug "zsh-users/zsh-autosuggestions" # configure
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
 
@@ -42,7 +40,11 @@ zplug load
 # alias ll="ls -lh"
 alias ll="exa -bghHl --git"
 alias la="ll -a"
+alias lt="ll -T"
+alias tree="ll -T"
 alias vim=nvim
+
+# 5fh4A3gUd7ujvFnd
 
 # local AWS development helpers
 alias sns='dotenv aws --endpoint-url http://localhost:4100 sns'
@@ -51,25 +53,31 @@ alias dynamodb='dotenv aws --endpoint-url http://localhost:8889 dynamodb'
 
 export EDITOR=nvim
 export LC_ALL="en_US.UTF-8"
-export PATH=$PATH:/bin:/usr/local/sbin:/usr/sbin:/usr/sbin:./bin:$HOME/.npm-global/bin:./node_modules/.bin
-export DOCKER_HOST="tcp://127.0.0.1:2376"
+export DOCKER_HOST='unix:///var/run/docker.sock'
+export VAULT_ADDR='http://127.0.0.1:8200'
+export TESTSSL_INSTALL_DIR=/usr/local/etc/testssl
+
+export PATH=/usr/local/bin:/usr/local/sbin:/usr/sbin:./bin:$HOME/.npm-global/bin:./node_modules/.bin:$GOPATH/bin:$PATH
+export PATH=/usr/local/opt/gnu-tar/libexec/gnubin:$PATH
 
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob \!.git 2>/dev/null'
 export FZF_DEFAULT_OPTS="--height 40% --inline-info"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_CTRL_T_OPTS="--preview 'head -50 {}'"
+export FZF_CTRL_T_OPTS="--preview 'bat --color=always --line-range 0:100 -n {}'"
 export FZF_CTRL_R_OPTS='--exact'
-export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
+export FZF_ALT_C_OPTS="--preview 'exa --color=always -T {} | head -50'"
 export FZF_TMUX="$TMUX"
 
-# rbenv & pyenv & nodenv
-eval "$(rbenv init -)"
-eval "$(pyenv init -)"
-eval "$(nodenv init -)"
-eval "$(goenv init -)"
+export GOPATH="$HOME/code/go"
+# try https://github.com/benvan/sandboxd
+# eval "$(rbenv init -)"
+# eval "$(pyenv init -)"
+# eval "$(nodenv init -)"
+# eval "$(goenv init -)"
+source $HOME/.zsh_langenv
 
 # rust toolkit
-export PATH=$PATH:~/.cargo/bin
+# export PATH=$PATH:~/.cargo/bin
 
 setopt BANG_HIST                 # Treat the '!' character specially during expansion.
 setopt EXTENDED_HISTORY          # Write the history file in the ':start:elapsed;command' format.
@@ -94,9 +102,4 @@ export HISTSIZE=11000
 export SAVEHIST=10000
 export HISTFILE=~/.zsh_history
 
-# tabtab source for serverless package
-# uninstall by removing these lines or running `tabtab uninstall serverless`
-[[ -f /home/dsgoncalves/.npm-global/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh ]] && . /home/dsgoncalves/.npm-global/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh
-# tabtab source for sls package
-# uninstall by removing these lines or running `tabtab uninstall sls`
-[[ -f /home/dsgoncalves/.npm-global/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh ]] && . /home/dsgoncalves/.npm-global/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh
+# zprof # debug init end

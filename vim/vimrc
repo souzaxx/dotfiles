@@ -1,11 +1,11 @@
 set nocompatible
 filetype off
 
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 
 " let Vundle manage Vundle required!
-Bundle 'gmarik/vundle'
+Bundle 'VundleVim/Vundle.vim'
 
 " Vundle bundles
 Bundle 'vim-airline/vim-airline'
@@ -75,13 +75,13 @@ Bundle 'myusuf3/numbers.vim'
 Bundle 'plasticboy/vim-markdown'
 Bundle 'pearofducks/ansible-vim'
 
+call vundle#end() " required
 filetype plugin indent on
-filetype plugin on
 
 syntax on
 
 " options
-set noesckeys " disable arrow keys
+" set noesckeys " disable arrow keys
 set showmode
 set showmatch
 set matchtime=0
@@ -235,8 +235,9 @@ nmap <Leader>gg :Ggrep
 " Use powerline fonts on airline
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 " include Obsession status
-let g:airline_section_z = airline#section#create(['%{ObsessionStatus(''$'', '''')}', 'windowswap', '%3p%% ', 'linenr', ':%3v '])
+" let g:airline_section_z = airline#section#create(['%{ObsessionStatus(''$'', '''')}', 'windowswap', '%3p%% ', 'linenr', ':%3v '])
 
 " ctrlp
 nmap <silent> <leader>b :CtrlPBuffer<CR>
@@ -244,7 +245,7 @@ nmap <silent> <leader>m :CtrlPMRU<CR>
 let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_max_height = 15
-let g:ctrlp_user_command = 'ack %s --nocolor -f --ignore-dir=tests/roles'
+let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 
 " neocomplete
 " let g:acp_enableAtStartup = 0
