@@ -1,36 +1,6 @@
 # source local config
 [[ -f $HOME/.zshlocal ]] && source $HOME/.zshlocal
 
-export ZSH=$HOME/.oh-my-zsh
-export PIP_CERT=$HOME/certificate-chain.pem
-export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
-export PDNSCLI_CONFIG_PATH=$HOME
-# export SSL_CERT_FILE=/etc/ssl/certs/ca-c6bank.pem
-export AWS_SDK_LOAD_CONFIG=1
-export JAVA_HOME=$HOME/Java
-
-# set PATH so it includes user's private bin if it exists
-[[ -d "$HOME/bin" ]] && PATH="$HOME/bin:/Users/lucas.souza/Library/Python/3.7/bin:$PATH"
-
-# set PATH so it includes user's private bin if it exists
-[[ -d "$HOME/.local/bin" ]] && PATH="$HOME/.local/bin:$PATH"
-
-# (Home|Linux)brew {{{
-linuxbrew="/home/linuxbrew/.linuxbrew"
-if [ -d $linuxbrew ]; then
-  export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
-else
-  export HOMEBREW_PREFIX="$HOME/Homebrew"
-fi
-
-export HOMEBREW_NO_AUTO_UPDATE=1
-export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
-export HOMEBREW_REPOSITORY="$HOMEBREW_PREFIX/Homebrew"
-export PATH="$HOMEBREW_PREFIX/bin:$HOMEBREW_PREFIX/sbin:$PATH"
-export MANPATH="$HOMEBREW_PREFIX/share/manpages:$MANPATH"
-export INFOPATH="$HOMEBREW_PREFIX/share/info:$INFOPATH"
-# }}}
-
 # goenv + Go {{{
 export GOPATH=$HOME/code/go
 export GOENV_SHELL=zsh
@@ -86,6 +56,16 @@ export FZF_TMUX="$TMUX"
 
 # misc
 export EDITOR=nvim
+# function terraform_ws {
+#      local statc="%{\e[0;35m%}" # assume clean
+
+#      if [ -d .terraform ]; then
+#       workspace=$(terraform workspace show 2> /dev/null) || return
+#       printf '%b' "$statc$workspace%{\e[0m%}"
+#      fi
+# }
+
+# MNML_RPROMPT=( $MNML_RPROMPT terraform_ws )
 
 # vim:foldmethod=marker:foldlevel=0:nomodeline:
 

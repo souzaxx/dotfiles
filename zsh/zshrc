@@ -1,18 +1,16 @@
-# zmodload zsh/zprof
-# setopt prompt_subst; zmodload zsh/datetime; PS4='+[$EPOCHREALTIME]%N:%i> '; set -x
-
-autoload -U +X bashcompinit && bashcompinit
 autoload -U +X compinit && compinit
+autoload -U +X bashcompinit && bashcompinit
 
-# zsh configs {{{
+# zsh customization
+source $HOME/.zshenv
+source $HOME/.zsh/theme/minimal.zsh
+source $HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# Enabling menu selection
+zstyle ':completion:*' menu select
+
 bindkey -e
-export REPORTTIME=10	# display how long all tasks over 10 seconds take
-# }}}
-
-ZSH_THEME="minimal"
 export LC_ALL=en_US.UTF-8
-source $ZSH/oh-my-zsh.sh
-plugins=(git docker terraform)
 
 # zsh history {{{
 setopt BANG_HIST                 # Treat the '!' character specially during expansion.
@@ -49,28 +47,25 @@ alias vi="nvim"
 alias k="kubectl"
 # }}}
 
+BREWBINPATH="$(brew --prefix)/bin"
+
+# auto complete {{{
+complete -o nospace -C $BREWBINPATH/consul consul
+complete -o nospace -C $BREWBINPATH/terraform terraform
+complete -o nospace -C $BREWBINPATH/vault vault
+source <(kubectl completion zsh)
+# }}}
+
 # Setup fzf {{{
 if [[ ! "$PATH" == *$HOMEBREW_PREFIX/opt/fzf/bin* ]]; then
   export PATH="$HOMEBREW_PREFIX/opt/fzf/bin:$PATH"
 fi
 [[ $- == *i* ]] && source "$HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh" 2> /dev/null
-source "$HOMEBREW_PREFIX/opt/fzf/shell/key-bindings.zsh"
+source "$(brew --prefix)/opt/fzf/shell/key-bindings.zsh"
 # }}}
 
-# local AWS development helpers {{{
-alias sns='dotenv aws --endpoint-url http://localhost:4100 sns'
-alias sqs='dotenv aws --endpoint-url http://localhost:4100 sqs'
-alias dynamodb='dotenv aws --endpoint-url http://localhost:8889 dynamodb'
-# }}}
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# zprof
-#
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'm:{a-zA-Z}={A-Za-z} l:|=* r:|=*'
 
-# vim:foldmethod=marker:foldlevel=0:nomodeline:
-
-autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C /Users/lucas.souza/bin/consul consul
-complete -o nospace -C /Users/lucas.souza/bin/vault vault
-source <(kubectl completion zsh)
-
-alias java='~/Java/bin/java'
+. $(brew --prefix asdf)/asdf.sh
