@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 
 _check_dependencies(){
  if ! command -v brew > /dev/null; then
@@ -16,18 +15,18 @@ _check_dependencies(){
 
 _install_tools(){
  asdf_packages=(
-   'consul|packer|waypoint|terraform|vault|boundary::https://github.com/Banno/asdf-hashicorp.git'
-   'fzf::https://github.com/kompiro/asdf-fzf.git'
-   'golang::https://github.com/kennyp/asdf-golang.git'
-   'helm::https://github.com/Antiarchitect/asdf-helm.git'
-   'java::https://github.com/halcyon/asdf-java.git'
-   'jq::https://github.com/focused-labs/asdf-jq.git'
-   'jsonnet::https://github.com/Banno/asdf-jsonnet.git'
-   'kubectl::https://github.com/Banno/asdf-kubectl.git'
-   'kubectx::'
-   'python::'
-   'tmux::https://github.com/aphecetche/asdf-tmux.git'
-   'yq::https://github.com/sudermanjr/asdf-yq.git'
+   'terraform'
+   'vault'
+   'fzf'
+   'golang'
+   'helm'
+   'java'
+   'jsonnet'
+   'kubectl'
+   'kubectx'
+   'python'
+   'yq'
+   'neovim'
  )
  brew_packages=(
    "asdf"
@@ -39,49 +38,51 @@ _install_tools(){
    "zsh"
    "awscli"
    "gpg"
-   "neovim"
    "hashicorp/tap/terraform-ls"
+   "tmux"
+   "bat"
+   "go"
+   "jq"
  )
 
  brew install $brew_packages
- asdf_config="$(brew --prefix asdf)/asdf.sh"
+
+ . $(brew --prefix asdf)/asdf.sh
 
  for index in "${asdf_packages[@]}"; do
-   KEY="${index%%::*}"
-   VALUE="${index##*::}"
-
-   asdf plugin-add ${KEY//|/ } $VALUE
-   asdf install ${KEY//|/ } latest
+   asdf plugin add $index
+   asdf install $index latest
+   asdf global $index $(asdf latest $index)
  done
 }
 
-
 _config_zsh(){
-  # Copy zsh config
   cp zsh/zshenv $HOME/.zshenv
   cp zsh/zshrc $HOME/.zshrc
-  mkdir -p $HOME/.zsh/theme $HOME/.zsh/plugins/zsh-syntax-highlighting
-  cd $HOME/.zsh/theme
-  curl -sS https://raw.githubusercontent.com/subnixr/minimal/master/minimal.zsh -O minimal.zsh 
-  cd -
-  cd $HOME/.zsh/plugins
-  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
-  cd -
+  if [[ ! -f $HOME/.zsh/theme/minimal.zsh ]]; then
+    mkdir -p $HOME/.zsh/theme 
+    curl -sS https://raw.githubusercontent.com/subnixr/minimal/master/minimal.zsh -O $HOME/.zsh/theme/minimal.zsh 
+  fi
+  if [[ ! -f $HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+    mkdir -p $HOME/.zsh/plugins
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.zsh/plugins
+  fi
 }
 
 _config_tmux(){
-  mkdir -p ~/.tmux/plugins
-  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-  # Copy tmux config
+  if [[ ! -f $HOME/.tmux/plugins/tpm/tpm ]]; then
+    mkdir -p ~/.tmux/plugins && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+  fi
   cp tmux/tmux.conf $HOME/.tmux.conf
   cp tmux/tmuxline.conf $HOME/.tmuxline.conf
 }
 
 _config_vim(){
-  mkdir -p ~/.config/nvim
-  sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  cp vim/nvim.vim $HOME/.config/nvim/init.vim
+  if [[ ! -f $HOME/.local/share/nvim/site/autoload/plug.vim ]]; then
+    sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+          https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  fi
+  mkdir -p ~/.config/nvim && cp vim/nvim.vim $HOME/.config/nvim/init.vim
 }
 
 main() {
@@ -91,4 +92,5 @@ main() {
   _config_tmux
   _config_vim
 }
+
 main

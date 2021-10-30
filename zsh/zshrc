@@ -6,6 +6,8 @@ source $HOME/.zshenv
 source $HOME/.zsh/theme/minimal.zsh
 source $HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
+. $(brew --prefix asdf)/asdf.sh
+
 # Enabling menu selection
 zstyle ':completion:*' menu select
 
@@ -50,22 +52,19 @@ alias k="kubectl"
 BREWBINPATH="$(brew --prefix)/bin"
 
 # auto complete {{{
-complete -o nospace -C $BREWBINPATH/consul consul
-complete -o nospace -C $BREWBINPATH/terraform terraform
-complete -o nospace -C $BREWBINPATH/vault vault
+complete -o nospace -C terraform terraform
+complete -o nospace -C vault vault
 source <(kubectl completion zsh)
 # }}}
 
 # Setup fzf {{{
-if [[ ! "$PATH" == *$HOMEBREW_PREFIX/opt/fzf/bin* ]]; then
-  export PATH="$HOMEBREW_PREFIX/opt/fzf/bin:$PATH"
+if [[ ! "$PATH" == *$(asdf where fzf)/bin* ]]; then
+  export PATH="$(asdf where fzf)/bin:$PATH"
 fi
-[[ $- == *i* ]] && source "$HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh" 2> /dev/null
-source "$(brew --prefix)/opt/fzf/shell/key-bindings.zsh"
+[[ $- == *i* ]] && source "$(asdf where fzf)/shell/completion.zsh" 2> /dev/null
+source "$(asdf where fzf)/shell/key-bindings.zsh"
 # }}}
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'm:{a-zA-Z}={A-Za-z} l:|=* r:|=*'
-
-. $(brew --prefix asdf)/asdf.sh
