@@ -29,6 +29,7 @@ _install_tools(){
    'neovim'
  )
  brew_packages=(
+   "jq"
    "asdf"
    "coreutils"
    "curl"
@@ -42,10 +43,10 @@ _install_tools(){
    "tmux"
    "bat"
    "go"
-   "jq"
  )
 
- brew install $brew_packages
+ eval brew install "${brew_packages[*]}"
+ brew install --cask rectangle
 
  . $(brew --prefix asdf)/asdf.sh
 
@@ -60,12 +61,11 @@ _config_zsh(){
   cp zsh/zshenv $HOME/.zshenv
   cp zsh/zshrc $HOME/.zshrc
   if [[ ! -f $HOME/.zsh/theme/minimal.zsh ]]; then
-    mkdir -p $HOME/.zsh/theme 
-    curl -sS https://raw.githubusercontent.com/subnixr/minimal/master/minimal.zsh -O $HOME/.zsh/theme/minimal.zsh 
+    curl -flo /Users/ldesouza/.zsh/theme/minimal.zsh --create-dirs https://raw.githubusercontent.com/subnixr/minimal/master/minimal.zsh
   fi
-  if [[ ! -f $HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
-    mkdir -p $HOME/.zsh/plugins
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.zsh/plugins
+  if [[ ! -f $HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh ]]; then
+    mkdir -p $HOME/.zsh/plugins/zsh-syntax-highlighting
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.zsh/plugins/zsh-syntax-highlighting
   fi
 }
 
