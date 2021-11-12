@@ -40,21 +40,69 @@ export SAVEHIST=10000000
 export HISTFILE=~/.zsh_history
 # }}}
 
-# aliases {{{
-alias ll='exa -Flh --git'
-alias la='ll -a'
-alias lt='ll -T'
-alias vim="nvim"
-alias vi="nvim"
-alias k="kubectl"
+BREWBINPATH="$(brew --prefix)/bin"
+
+# Preferred editor for local and remote sessions
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='vim'
+else
+  export EDITOR='vim'
+fi
+
+# Colors {
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+GREEN='\033[1;32m'
+ORANGE='\033[1;'
+NC='\033[0m'
 # }}}
 
-BREWBINPATH="$(brew --prefix)/bin"
+# ALIASES {{{
+# General Aliases
+alias ls='exa'
+alias ll='exa -Flh --git -a'
+alias lst="tree"
+alias del="trash"
+alias rm='echo -ne "${YELLOW}Hold On! (ノಠ益ಠ)ノ彡┻━┻${NC}\n${GREEN}Use del or rm full path: /bin/rm${NC}"'
+alias vim="nvim"
+alias vi="nvim"
+
+# DOCKER Aliases 
+alias docker_clean_images='docker rmi $(docker images -a --filter=dangling=true -q)'
+alias docker_clean_ps='docker rm $(docker ps --filter=status=exited --filter=status=created -q)'
+
+# GIT Aliases
+alias gs="git status"
+alias gc="git clone"
+alias ga="git add"
+alias gci="git commit"
+alias gp="git push -u"
+
+# K8S Aliases
+alias mk="minikube"
+alias k="kubectl"
+alias kg="kubectl get"
+alias kd="kubectl describe"
+alias kl="kubectl logs"
+alias kaf="kubectl apply -f"
+alias kdel="kubectl delete"
+
+# TERRAFORM Aliases
+alias tfwl="terraform workspace list"
+alias tfws="terraform workspace select"
+alias tfa="terraform apply"
+alias tfp="terraform plan"
+alias tfi="tfswitch ; terraform init"
+# }}}
 
 # auto complete {{{
 complete -o nospace -C terraform terraform
 complete -o nospace -C vault vault
 source <(kubectl completion zsh)
+complete -F __start_kubectl k
+eval "$(pyenv init --path)"
+autoload bashcompinit && bashcompinit
+
 # }}}
 
 # Setup fzf {{{
@@ -68,3 +116,46 @@ source "$(asdf where fzf)/shell/key-bindings.zsh"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'm:{a-zA-Z}={A-Za-z} l:|=* r:|=*'
+
+# AWSCLI Settings {{{
+export AWS_PAGER=""
+# }}}
+
+# Docker + Minukube {{{
+# https://dhwaneetbhatt.com/blog/run-docker-without-docker-desktop-on-macos
+eval $(minikube docker-env)
+# }}}
+
+
+# BASH Functions {{{
+# Update all git repositories from the current folder.
+git_update_all() {
+  for project in $(ls -1); do
+
+    echo -ne "Updating ${YELLOW}$project${NC}: "
+
+    cd $project
+    current_branch=$(git branch | grep '*' | sed 's/^* //g' | head -1)
+
+    git stash > /dev/null 2>&1 
+    git co master > /dev/null 2>&1 
+    git pull > /dev/null 2>&1 
+    git co $current_branch > /dev/null 2>&1 
+    git stash pop > /dev/null 2>&1 
+    cd - > /dev/null 2>&1 
+
+    echo -e "${GREEN}Done!${NC}"
+  done
+}
+
+# ZINIT {{{
+source $(brew --prefix)/opt/zinit/zinit.zsh
+
+# Plugins
+# kube-ps1
+## Show kubernetes current context. 
+## Disable by default. Type kubeon to activate
+zplugin light jonmosco/kube-ps1
+PROMPT='$(kube_ps1)'$PROMPT
+kubeoff
+# }}}

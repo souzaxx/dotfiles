@@ -1,67 +1,94 @@
 #!/bin/bash
 
+_backup() {
+  backup_files=(
+    '.zshrc'
+    '.zshenv'
+    '.vimrc'
+    '.vim'
+    'tmux.conf'
+    'tmuxline.conf'
+    'nvim.vim'
+    'coc-settings.json'
+    'gitconfig'
+    '.gitmodules'
+  )
+}
+
 _check_dependencies(){
- if ! command -v brew > /dev/null; then
-   read -p "[INFO] Dependency not met, you don't have homebrew installed. Install? (y/n) " prompt
-   if [[ $prompt == "y" || $prompt == "Y" || $prompt == "yes" || $prompt == "Yes" ]]; then
-     echo "[INFO] Installing Homebrew..."
-     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-   else
-     echo "[ERROR] Dependency not met: homebrew"
-     exit 1
-   fi
- fi
+  if ! command -v brew > /dev/null; then
+    read -p "[INFO] Dependency not met, you don't have homebrew installed. Install? (y/n) " prompt
+    if [[ $prompt == "y" || $prompt == "Y" || $prompt == "yes" || $prompt == "Yes" ]]; then
+      echo "[INFO] Installing Homebrew..."
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    else
+      echo "[ERROR] Dependency not met: homebrew"
+      exit 1
+    fi
+  fi
 }
 
 _install_tools(){
- asdf_packages=(
-   'terraform'
-   'vault'
-   'fzf'
-   'golang'
-   'helm'
-   'java'
-   'jsonnet'
-   'kubectl'
-   'kubectx'
-   'python'
-   'yq'
-   'neovim'
+  asdf_packages=(
+    'fzf'
+    'golang'
+    'helm'
+    'java'
+    'jsonnet'
+    'kubectl'
+    'kubectx'
+    'neovim'
+    'python'
+    'terraform'
+    'vault'
+    'yq'
+    )
+  brew_packages=(
+    "ack"
+    "asdf"
+    "awscli"
+    "bat"
+    "coreutils"
+    "curl"
+    "exa"
+    "git"
+    "go"
+    "gpg"
+    "hashicorp/tap/terraform-ls"
+    "hyperkit"
+    "icdiff"
+    "jq"
+    "macos-trash" # config required 
+    "minikube"
+    "rg"
+    "tfswitch"
+    "tmux"
+    "tree" # alias required
+    "zinit"
+    "zsh"  # config required
  )
- brew_packages=(
-   "jq"
-   "asdf"
-   "coreutils"
-   "curl"
-   "git"
-   "icdiff"
-   "rg"
-   "zsh"
-   "awscli"
-   "gpg"
-   "hashicorp/tap/terraform-ls"
-   "tmux"
-   "bat"
-   "go"
- )
 
- eval brew install "${brew_packages[*]}"
- brew install --cask rectangle
+  eval brew install "${brew_packages[*]}"
+  brew install --cask rectangle
 
- . $(brew --prefix asdf)/asdf.sh
+  . $(brew --prefix asdf)/asdf.sh
 
- for index in "${asdf_packages[@]}"; do
-   asdf plugin add $index
-   asdf install $index latest
-   asdf global $index $(asdf latest $index)
- done
+  for index in "${asdf_packages[@]}"; do
+    asdf plugin add $index
+    asdf install $index latest
+    asdf global $index $(asdf latest $index)
+  done
+}
+
+_oh_my_zsh_install() {
+  sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 }
 
 _config_zsh(){
   cp zsh/zshenv $HOME/.zshenv
   cp zsh/zshrc $HOME/.zshrc
   if [[ ! -f $HOME/.zsh/theme/minimal.zsh ]]; then
-    curl -flo /Users/ldesouza/.zsh/theme/minimal.zsh --create-dirs https://raw.githubusercontent.com/subnixr/minimal/master/minimal.zsh
+    curl -flo /Users/${USER}/.zsh/theme/minimal.zsh --create-dirs https://raw.githubusercontent.com/subnixr/minimal/master/minimal.zsh
   fi
   if [[ ! -f $HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh ]]; then
     mkdir -p $HOME/.zsh/plugins/zsh-syntax-highlighting
@@ -91,6 +118,7 @@ main() {
   _config_zsh
   _config_tmux
   _config_vim
+  # _oh_my_zsh_install
 }
 
 main
