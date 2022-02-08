@@ -41,14 +41,22 @@ _install_tools(){
    "gpg"
    "hashicorp/tap/terraform-ls"
    "tmux"
+   "hyperkit"
+   "minikube"
+   "docker"
+   "docker-compose"
    "bat"
    "go"
+   "rectangle"
+   "stats"
+   "dozer"
  )
 
- eval brew install "${brew_packages[*]}"
- brew install --cask rectangle
+ if [[ $OSTYPE == 'darwin'* ]]; then
+   eval brew install "${brew_packages[*]}"
 
- . $(brew --prefix asdf)/asdf.sh
+   . $(brew --prefix asdf)/asdf.sh
+fi
 
  for index in "${asdf_packages[@]}"; do
    asdf plugin add $index
