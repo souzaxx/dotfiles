@@ -42,6 +42,7 @@ export HISTFILE=~/.zsh_history
 
 # aliases {{{
 alias ll='exa -Flh --git'
+alias l='exa -l'
 alias la='ll -a'
 alias lt='ll -T'
 alias vim="nvim"
