@@ -52,11 +52,16 @@ _install_tools(){
    'kubectl'
    'kubectx'
    'python'
+   "jq"
    'yq'
    'neovim'
+   "awscli"
+   "terraform-ls"
+   "tmux"
+   "minikube"
+   "bat"
  )
  brew_packages=(
-   "jq"
    "asdf"
    "coreutils"
    "curl"
@@ -64,15 +69,10 @@ _install_tools(){
    "icdiff"
    "rg"
    "zsh"
-   "awscli"
    "gpg"
-   "hashicorp/tap/terraform-ls"
-   "tmux"
    "hyperkit"
-   "minikube"
    "docker"
    "docker-compose"
-   "bat"
    "go"
    "rectangle"
    "stats"
