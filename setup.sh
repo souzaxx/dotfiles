@@ -1,10 +1,37 @@
 #!/bin/bash
 
+# Define a function which rename a `target` file to `target.backup` if the file
+# exists and if it's a 'real' file, ie not a symlink
+backup_files() {
+  declare -a arr=("${@}")
+  declare -i len=${#arr[@]}
+  # Show passed array
+  for ((n = 0; n < len; n++)); do
+    target=${arr[$n]}
+    if [ -e "$target" ]; then
+      if [ ! -L "$target" ]; then
+        mv "$target" "$target.backup"
+        echo "-----> Moved your old $target config file to $target.backup"
+      fi
+    fi
+  done
+}
+
+copy_files() {
+  declare -a arr=("${@}")
+  declare -i len=${#arr[@]}
+  # Show passed array
+  for ((n = 0; n < len; n++)); do
+    file=$(echo ${arr[$n]} | cut -d "/" -f 2)
+    echo "-----> Copying ${arr[$n]} config file to $HOME/.${file}"
+  done
+}
+
 _check_dependencies(){
  if ! command -v brew > /dev/null; then
-   read -p "[INFO] Dependency not met, you don't have homebrew installed. Install? (y/n) " prompt
+   read -p "Dependency not met, you don't have homebrew installed. Install? (y/n) " prompt
    if [[ $prompt == "y" || $prompt == "Y" || $prompt == "yes" || $prompt == "Yes" ]]; then
-     echo "[INFO] Installing Homebrew..."
+     echo "Installing Homebrew..."
      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
    else
      echo "[ERROR] Dependency not met: homebrew"
@@ -58,18 +85,18 @@ _install_tools(){
    . $(brew --prefix asdf)/asdf.sh
 fi
 
- for index in "${asdf_packages[@]}"; do
-   asdf plugin add $index
-   asdf install $index latest
-   asdf global $index $(asdf latest $index)
- done
+for index in "${asdf_packages[@]}"; do
+  asdf plugin add $index
+  asdf install $index latest
+  asdf global $index $(asdf latest $index)
+done
 }
 
 _config_zsh(){
-  cp zsh/zshenv $HOME/.zshenv
-  cp zsh/zshrc $HOME/.zshrc
+  backup_files $HOME/.zshenv $HOME/.zshrc
+  copy_files zsh/zshenv zsh/zshrc
   if [[ ! -f $HOME/.zsh/theme/minimal.zsh ]]; then
-    curl -flo /Users/ldesouza/.zsh/theme/minimal.zsh --create-dirs https://raw.githubusercontent.com/subnixr/minimal/master/minimal.zsh
+    curl -flo $HOME/.zsh/theme/minimal.zsh --create-dirs https://raw.githubusercontent.com/subnixr/minimal/master/minimal.zsh
   fi
   if [[ ! -f $HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh ]]; then
     mkdir -p $HOME/.zsh/plugins/zsh-syntax-highlighting
@@ -78,11 +105,11 @@ _config_zsh(){
 }
 
 _config_tmux(){
+  backup_files $HOME/.tmux.conf $HOME/.tmuxline.conf
   if [[ ! -f $HOME/.tmux/plugins/tpm/tpm ]]; then
     mkdir -p ~/.tmux/plugins && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
   fi
-  cp tmux/tmux.conf $HOME/.tmux.conf
-  cp tmux/tmuxline.conf $HOME/.tmuxline.conf
+  copy_files tmux/tmux.conf tmux/tmuxline.conf
 }
 
 _config_vim(){
