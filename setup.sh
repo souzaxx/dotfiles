@@ -34,6 +34,7 @@ _check_dependencies(){
    if [[ $prompt == "y" || $prompt == "Y" || $prompt == "yes" || $prompt == "Yes" ]]; then
      echo "Installing Homebrew..."
      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+     eval "$(/opt/homebrew/bin/brew shellenv)"
    else
      echo "[ERROR] Dependency not met: homebrew"
      exit 1
@@ -110,7 +111,9 @@ _config_tmux(){
   if [[ ! -f $HOME/.tmux/plugins/tpm/tpm ]]; then
     mkdir -p ~/.tmux/plugins && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
   fi
-  $HOME/.tmux/plugins/tpm/bindings/install_plugins
+  tmux new-session -A -s myprogramsession \;
+    send -t myprogramsession "nohup $HOME/.tmux/plugins/tpm/bindings/install_plugins &>/dev/null &" ENTER \;
+    detach -s myprogramsession && sleep 1 && pkill tmux
 }
 
 _config_vim(){
