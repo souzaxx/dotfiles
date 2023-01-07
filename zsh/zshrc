@@ -6,7 +6,7 @@ source $HOME/.zshenv
 source $HOME/.zsh/theme/minimal.zsh
 source $HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-. $(brew --prefix asdf)/asdf.sh
+. $(brew --prefix asdf)/libexec/asdf.sh
 
 # Enabling menu selection
 zstyle ':completion:*' menu select

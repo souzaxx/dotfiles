@@ -1,6 +1,8 @@
 [user]
   name = Lucas de Souza
   email = 201293@gmail.com
+[github]
+  user = souzaxx
 [push]
   default = current
 [fetch]
@@ -57,5 +59,3 @@
   tool = vimdiff
 [help]
   autocorrect = 1
-[github]
-  user = souzaxx

@@ -24,6 +24,7 @@ copy_files() {
   for ((n = 0; n < len; n++)); do
     file=$(echo ${arr[$n]} | cut -d "/" -f 2)
     echo "-----> Copying ${arr[$n]} config file to $HOME/.${file}"
+    cp -v "${arr[$n]}" "$HOME/.${file}"
   done
 }
 
@@ -47,7 +48,6 @@ _install_tools(){
    'fzf'
    'golang'
    'helm'
-   'java'
    'jsonnet'
    'kubectl'
    'kubectx'
@@ -57,7 +57,6 @@ _install_tools(){
    'neovim'
    "awscli"
    "terraform-ls"
-   "tmux"
    "minikube"
    "bat"
  )
@@ -70,6 +69,7 @@ _install_tools(){
    "rg"
    "zsh"
    "gpg"
+   "tmux"
    "hyperkit"
    "docker"
    "docker-compose"
@@ -80,9 +80,9 @@ _install_tools(){
  )
 
  if [[ $OSTYPE == 'darwin'* ]]; then
-   eval brew install "${brew_packages[*]}"
+  eval brew install "${brew_packages[*]}"
 
-   . $(brew --prefix asdf)/asdf.sh
+  . $(brew --prefix asdf)/libexec/asdf.sh
 fi
 
 for index in "${asdf_packages[@]}"; do
@@ -106,10 +106,11 @@ _config_zsh(){
 
 _config_tmux(){
   backup_files $HOME/.tmux.conf $HOME/.tmuxline.conf
+  copy_files tmux/tmux.conf tmux/tmuxline.conf
   if [[ ! -f $HOME/.tmux/plugins/tpm/tpm ]]; then
     mkdir -p ~/.tmux/plugins && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
   fi
-  copy_files tmux/tmux.conf tmux/tmuxline.conf
+  $HOME/.tmux/plugins/tpm/bindings/install_plugins
 }
 
 _config_vim(){
@@ -120,12 +121,18 @@ _config_vim(){
   mkdir -p ~/.config/nvim && cp vim/nvim.vim $HOME/.config/nvim/init.vim
 }
 
+_config_git(){
+  backup_files $HOME/.gitconfig $HOME/.gitmodules
+  copy_files git/gitconfig git/gitmodules
+}
+
 main() {
   _check_dependencies
   _install_tools
   _config_zsh
   _config_tmux
   _config_vim
+  _config_git
 }
 
 main
