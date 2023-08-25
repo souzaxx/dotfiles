@@ -98,6 +98,7 @@ nnoremap <silent> g* g*zz
 nnoremap <silent> g# g#zz
 
 " }}}
+
 " vim-plug - plugins {{{
 call plug#begin('~/.local/share/nvim/plugged')
 
@@ -144,6 +145,7 @@ Plug 'hashivim/vim-terraform', { 'do': 'make' }
 " Initialize plugin system
 call plug#end()
 " }}}
+
 " fzf {{{
 set rtp+=~/Homebrew/opt/fzf
 let g:fzf_layout = { 'down': '~20%' }

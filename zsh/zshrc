@@ -67,6 +67,10 @@ fi
 source "$(asdf where fzf)/shell/key-bindings.zsh"
 # }}}
 
+set -o vi
+
+bindkey "^R" fzf-history-widget
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'm:{a-zA-Z}={A-Za-z} l:|=* r:|=*'
