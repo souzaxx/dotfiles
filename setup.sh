@@ -5,7 +5,7 @@ _check_dependencies(){
    read -p "Dependency not met, you don't have homebrew installed. Do you want to install it? (y/n) " prompt
    if [[ $prompt == "y" || $prompt == "Y" || $prompt == "yes" || $prompt == "Yes" ]]; then
      echo "Installing Homebrew..."
-     sh -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+     bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
      eval "$(/opt/homebrew/bin/brew shellenv)"
    else
      echo "[ERROR] Dependency not met: homebrew"
@@ -31,25 +31,26 @@ _install_tools(){
     "awscli"
     "terraform-ls"
     "minikube"
-    "bat"
   )
   brew_packages=(
     "asdf"
     "coreutils"
     "curl"
+    "iterm2" 
     "git"
     "icdiff"
     "rg"
     "zsh"
     "gpg"
     "tmux"
-    "hyperkit"
+    "qemu"
     "docker"
     "docker-compose"
     "go"
     "rectangle"
     "stats"
     "dozer"
+    "bat"
   )
 
   if [[ $OSTYPE == 'darwin'* ]]; then
@@ -66,7 +67,8 @@ _install_tools(){
 }
 
 _config_zsh(){
-  ln -s $PWD/zsh/.zshrc  ~/.zshrc
+  ln -fs $PWD/zsh/zshrc  ~/.zshrc
+  ln -fs $PWD/zsh/zshenv ~/.zshenv
   if [[ ! -f $HOME/.zsh/theme/minimal.zsh ]]; then
     curl -flo $HOME/.zsh/theme/minimal.zsh --create-dirs https://raw.githubusercontent.com/subnixr/minimal/master/minimal.zsh
   fi
@@ -77,12 +79,13 @@ _config_zsh(){
 }
 
 _config_tmux(){
-  ln -s $PWD/tmux/tmux.conf ~/.tmuxline.conf
+  ln -fs $PWD/tmux/tmux.conf 	 ~/.tmux.conf
+  ln -fs $PWD/tmux/tmuxline.conf ~/.tmuxline.conf
   if [[ ! -f $HOME/.tmux/plugins/tpm/tpm ]]; then
     mkdir -p ~/.tmux/plugins && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
   fi
-  tmux new-session -A -s myprogramsession \;
-    send -t myprogramsession "nohup $HOME/.tmux/plugins/tpm/bindings/install_plugins &>/dev/null &" ENTER \;
+  tmux new-session -A -s myprogramsession \
+    send -t myprogramsession "nohup $HOME/.tmux/plugins/tpm/bindings/install_plugins &>/dev/null &" ENTER \
     detach -s myprogramsession && sleep 1 && pkill tmux
 }
 
@@ -92,21 +95,28 @@ _config_vim(){
           https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
   fi
   mkdir -p ~/.config/nvim
-  ln -s $PWD/vim/nvim.vim ~/.config/nvim/init.vim
+  ln -fs $PWD/vim/nvim.vim ~/.config/nvim/init.vim
   vim -E -s -u "~/.config/nvim/init.vim" +PlugInstall +qall
 }
 
 _config_git(){
-  ln -s $PWD/git/gitconfig ~/.gitmodules
+  ln -fs $PWD/git/gitconfig ~/.gitconfig
+}
+
+_install_font(){
+  if [[ ! -f $HOME/Library/Fonts/ProFont\ For\ Powerline.ttf ]]; then
+    curl -Lsfo ~/Library/Fonts/ProFont\ For\ Powerline.ttf 'https://github.com/powerline/fonts/raw/master/ProFont/ProFont%20For%20Powerline.ttf'
+  fi
 }
 
 main() {
-  _check_dependencies
-  _install_tools
-  _config_zsh
-  _config_tmux
-  _config_vim
-  _config_git
+#   _check_dependencies
+#   _install_tools
+#   _config_zsh
+#   _config_tmux
+#   _config_vim
+#   _config_git
+  _install_font
 }
 
 main
