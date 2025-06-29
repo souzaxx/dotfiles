@@ -2,12 +2,13 @@ autoload -U +X compinit && compinit
 autoload -U +X bashcompinit && bashcompinit
 
 # zsh customization
-source $HOME/.zshenv
-source $HOME/.zsh/theme/minimal.zsh
-source $HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $ZDOTDIR/.zshenv
+source $ZDOTDIR/theme/minimal.zsh
+source $ZDOTDIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
 . $(brew --prefix asdf)/libexec/asdf.sh
+eval "$(~/.local/bin/mise activate zsh)"
 
 # Enabling menu selection
 zstyle ':completion:*' menu select
@@ -59,18 +60,10 @@ complete -o nospace -C vault vault
 source <(kubectl completion zsh)
 # }}}
 
-# Setup fzf {{{
-if [[ ! "$PATH" == *$(asdf where fzf)/bin* ]]; then
-  export PATH="$(asdf where fzf)/bin:$PATH"
-fi
-[[ $- == *i* ]] && source "$(asdf where fzf)/shell/completion.zsh" 2> /dev/null
-source "$(asdf where fzf)/shell/key-bindings.zsh"
-# }}}
+source <(fzf --zsh)
 
 set -o vi
 
 bindkey "^R" fzf-history-widget
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'm:{a-zA-Z}={A-Za-z} l:|=* r:|=*'
